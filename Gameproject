@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    srand(time(0));
+
+    int playerChoice;
+    int ballPosition;
+    int score = 0;
+    int lives = 3;
+    int difficulty = 1;
+
+    cout << "=== CATCH THE NUMBER GAME ===" << endl;
+    cout << "Pick a number between 1 and 5 to catch the falling ball!" << endl;
+
+    while (lives > 0) {
+
+        ballPosition = rand() % 5 + 1;
+
+        cout << "\nChoose position (1-5): ";
+        cin >> playerChoice;
+
+        if (playerChoice == ballPosition) {
+            score++;
+            cout << "Good catch! Score: " << score;
+
+            // increase difficulty
+            if (score % 3 == 0) {
+                difficulty++;
+                cout << "\nLevel up! Difficulty increased!";
+            }
+
+        } else {
+            lives--;
+            cout << "Missed! Ball was at: " << ballPosition;
+            cout << "\nLives left: " << lives;
+        }
+    }
+
+    cout << "\n\nGAME OVER" << endl;
+    cout << "Final Score: " << score << endl;
+
+    return 0;
+}
