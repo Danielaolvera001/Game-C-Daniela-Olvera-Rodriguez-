@@ -1,0 +1,119 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h> // para usleep (velocidad)
+
+using namespace std;
+
+int main() {
+    srand(time(0));
+
+    int playerChoice;
+    int ball1, ball2;
+    int score = 0;
+    int lives = 3;
+    int misses = 0;
+    int level = 1;
+
+    int speed = 800000; // microsegundos (más bajo = más rápido)
+
+    // 🎮 MENU DE INICIO
+    int option;
+
+    cout << "=================================\n";
+    cout << "      CATCH THE NUMBER GAME      \n";
+    cout << "=================================\n";
+    cout << "1. Start Game\n";
+    cout << "2. How to Play\n";
+    cout << "3. Exit\n";
+    cout << "Choose option: ";
+    cin >> option;
+
+    if (option == 2) {
+        cout << "\nPick a number between 1-5 to catch the ball(s).\n";
+        cout << "Don't miss too many or you lose!\n\n";
+    } else if (option == 3) {
+        return 0;
+    }
+
+    cout << "\nGame Starting...\n";
+
+    // 🎮 GAME LOOP
+    while (lives > 0) {
+
+        cout << "\nLevel: " << level;
+        cout << "\nLives: " << lives;
+        cout << "\nScore: " << score << endl;
+
+        // 🎯 velocidad (más nivel = más rápido)
+        usleep(speed);
+
+        // 🎯 dificultad: una o dos pelotillas
+        ball1 = rand() % 5 + 1;
+
+        if (level >= 3) {
+            ball2 = rand() % 5 + 1;
+        } else {
+            ball2 = -1;
+        }
+
+        cout << "\nChoose position (1-5): ";
+        cin >> playerChoice;
+
+        bool hit = false;
+
+        // 🎯 chequeo pelota 1
+        if (playerChoice == ball1) {
+            hit = true;
+        }
+
+        // 🎯 chequeo pelota 2
+        if (ball2 != -1 && playerChoice == ball2) {
+            hit = true;
+        }
+
+        if (hit) {
+            score++;
+
+            cout << "BEEP! Good catch! \a\n"; // sonido simulado
+
+            // subir nivel cada 3 puntos
+            if (score % 3 == 0) {
+                level++;
+
+                // hacer el juego más rápido
+                speed -= 100000;
+                if (speed < 200000) speed = 200000;
+
+                cout << "Level Up! Now it's faster!\n";
+            }
+
+        } else {
+            lives--;
+            misses++;
+
+            cout << "Missed! Balls were at: "
+                 << ball1;
+
+            if (ball2 != -1) {
+                cout << " and " << ball2;
+            }
+
+            cout << "\nLives left: " << lives << endl;
+        }
+
+        // 🎯 GAME OVER si falla 5 veces
+        if (misses >= 5) {
+            cout << "\n💀 GAME OVER - Too many misses!\n";
+            break;
+        }
+    }
+
+    cout << "\n=====================\n";
+    cout << "      GAME OVER      \n";
+    cout << "=====================\n";
+    cout << "Final Score: " << score << endl;
+    cout << "Level Reached: " << level << endl;
+
+    return 0;
+}
